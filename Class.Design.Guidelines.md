@@ -1,10 +1,11 @@
-# Class Design Guidelines #
+# 클래스 디자인 가이드라인 #
 
-## A class or interface should have a single purpose ![](imgs/must.png) ##
+## 하나의 클래스 또는 인터페이스는 반드시 단일한 목적을 가져야한다![](imgs/must.png) ##
 
-A class or interface should have a single purpose within the system it participates in. In general, a class is either representing a primitive type like an email or ISBN number, an abstraction of some business concept, a plain data structure or responsible for orchestrating the interaction between other classes. It is never a combination of those. This rule is widely known as the [Single Responsibility Principle (SRP)][srp], one of the [SOLID principles][solid].
+하나의 클래스 또는 인터페이스는 그것이 포함된 시스템에서 단일한 목적을 가져야합니다. 일반적으로 클래스는 email이나 ISBN 번호와 같은 기본 형식을 대표하거나, 어떤 비즈니스 컨셉에 대한 추상화이거나, 순수 데이터 구조이거나, 다른 클래스들의 상호작용을 조율하는 책임을 가집니다. 절대로 이들을 조합하지 않습니다. 이 규칙은 [SOLID 원칙-SOLID principles][solid]중에서 [단일 책임 원칙-Single Responsibility Principle (SRP)][srp]으로 잘 알려져 있습니다.
 
-Using [Design Patterns](http://en.wikipedia.org/wiki/Design_pattern_(computer_science)) is to communicate the intent of a class. If a single design pattern is assigned to a class, the class is more likely doing more than one thing.
+
+[디자인 패턴-Design Patterns](http://en.wikipedia.org/wiki/Design_pattern_(computer_science))을 사용한다는 것은 클래스의 의도를 전달하려는 것입니다. If a single design pattern is assigned to a class, the class is more likely doing more than one thing.
 
 
 ## An interface should be small and focused ![](imgs/should.png) ##
