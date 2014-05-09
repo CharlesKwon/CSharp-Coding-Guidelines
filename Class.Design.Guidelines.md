@@ -4,7 +4,7 @@
 
 A class or interface should have a single purpose within the system it participates in. In general, a class is either representing a primitive type like an email or ISBN number, an abstraction of some business concept, a plain data structure or responsible for orchestrating the interaction between other classes. It is never a combination of those. This rule is widely known as the [Single Responsibility Principle (SRP)][srp], one of the [SOLID principles][solid].
 
-Using [Design Patterns](http://en.wikipedia.org/wiki/Design_pattern_(computer_science)) is to communicate the intent of a class. If a single design pattern is assigned to a class, the class is more likely doing more than one thing.
+Using [Design Patterns](http://en.wikipedia.org/wiki/Design_pattern_(computer_science)) is to communicate the intent of a class. If you can’t assign a single design pattern to a class, chances are that it is doing more than one thing.
 
 
 ## An interface should be small and focused ![](imgs/should.png) ##
