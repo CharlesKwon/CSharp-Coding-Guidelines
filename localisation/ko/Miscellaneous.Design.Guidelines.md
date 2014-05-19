@@ -30,7 +30,7 @@
 
 ## 항상 이벤트를 처리하는 대리자가 `null`인지 확인합니다 ![](imgs/must.png) ##
 
-An event that has no subscribers is `null`, so before invoking, always make sure that the delegate list represented by the event variable is not `null`. Furthermore, to prevent conflicting changes from concurrent threads, use a temporary variable to prevent concurrent changes to the delegate.
+구독자가 없는 이벤트는 `null`이므로 호출하기 전에 항상 이 이벤트 변수가 대표하는 대리자의 목록이 `null`이 아닌지 확인합니다. 또한 동시에 여러 스레드에서 발생할 수 있는 충돌을 방지하기 위해 임시 변수를 사용합니다.
 
 ```c#
 event EventHandler<NotifyEventArgs> Notify;
@@ -44,37 +44,38 @@ void RaiseNotifyEvent(NotifyEventArgs args)
 }
 ```
 
-You can prevent the delegate list from being empty altogether. Simply assign an empty delegate like this:
+대리자의 목록이 `null`이 되지 않도록 방지할 수도 있습니다. 간단하게 다음과 같이 빈 대리자를 할당하면 됩니다.
 
 ```c#
 event EventHandler<NotifyEventArgs> Notify = delegate {};
 ```
 
 
-## Use a protected virtual method to raise each event ![](imgs/should.png) ##
+## 각 이벤트를 발생시킬 때 `protected virtual` 메서드를 사용합니다 ![](imgs/should.png) ##
 
-Complying with this guideline allows derived classes to handle a base class event by overriding the protected method. The name of the protected virtual method should be the same as the event name prefixed with On. For example, the protected virtual method for an event named `TimeChanged` is named `OnTimeChanged`.
+이 가이드라인에 따르면 파생 클래스는 `protected` 메서드를 오버라이딩 하여 기반 클래스의 이벤트를 처리할 수 있습니다. 해당 `protected virtual` 메서드는 이벤트와 이름이 같아야 하며 이름 앞에 `On`을 붙입니다. 예를 들어 `TimeChanged` 이벤트의 `virtual` 메서드는 `OnTimeChanged`라는 이름을 사용합니다.
 
-![NOTE](imgs/note.png) Derived classes that override the protected virtual method are not required to call the base class implementation. The base class must continue to work correctly even if its implementation is not called.
-
-
-## Consider providing property-changed events ![](imgs/may.png) ##
-
-Consider providing events that are raised when certain properties are changed. Such an event should be named `PropertyChanged`, where Property should be replaced with the name of the property with which this event is associated.
-
-![NOTE](imgs/note.png) If your class has many properties that require corresponding events, consider implementing the `INotifyPropertyChanged` interface instead. It is often used in the [Presentation Model](http://martinfowler.com/eaaDev/PresentationModel.html) and [Model-View-ViewModel](http://msdn.microsoft.com/en-us/magazine/dd419663.aspx) patterns.
+![NOTE](imgs/note.png) 파생 클래스가 오버라이드한 `protected virtual` 메서드에서 반드시 기반 클래스의 구현을 호출할 필요는 없습니다. 기반 클래스는 그 구현(된 메서드)이 호출되지 않더라도 반드시 올바르게 동작해야 합니다.
 
 
-## Don't pass `null` as the sender argument when raising an event ![](imgs/must.png) ##
+## 프로퍼티 변경 이벤트 제공을 고려합니다 ![](imgs/may.png) ##
 
-Often, an event handler is used to handle similar events from multiple senders. The sender argument is then used to get to the source of the event. Always pass a reference to the source (typically `this`) when raising the event. Furthermore don't pass `null` as the event data parameter when raising an event. If there is no event data, pass `EventArgs.Empty` instead of `null`.
+특정 프로퍼티가 변경되었을 때 발생하는 이벤트 제공을 고려합니다. 이런 이벤트는 `PropertyChanged`라는 이름이어야 하며, 이를 통해 어떤 프로퍼티에 연관되어 있는지를 알 수 있어야 합니다.
 
-![EXCEPTION](imgs/exception.png) On static events, the sender argument ![SHOULD](imgs/should.png) be `null`.
+![NOTE](imgs/note.png) 만약 클래스에 변경 이벤트가 필요한 프로퍼티가 많다면 `INotifyPropertyChanged` 인터페이스를 구현하는 것이 좋습니다. 이 방법은 [Presentation Model](http://martinfowler.com/eaaDev/PresentationModel.html)와 [Model-View-ViewModel](http://msdn.microsoft.com/en-us/magazine/dd419663.aspx) 패턴에서 자주 사용합니다.
 
 
-## Use generic constraints if applicable ![](imgs/should.png) ##
+## 이벤트를 발생시킬 때 `sender` 인자에 `null`을 전달하지 않습니다 ![](imgs/must.png) ##
 
-Instead of casting to and from the `object` type in generic types or methods, use `where` constraints or the `as` operator to specify the exact characteristics of the generic parameter. For example:
+흔히 하나의 이벤트 처리자는 여러 `sender`로부터 비슷한 이벤트를 처리합니다. `sender` 인자는 이벤트의 발생자를 얻기 위해 사용됩니다. 이벤트를 발생시킬 때 항상 발생자(일반적으로 `this`)에 대한 참조를 전달해야 합니다. 또한 이벤트의 데이터 파라미터에도 `null`을 전달하지 않도록 합니다. 만약 이벤트 데이터가 없다면 `null`이 아니라 `EventArgs.Empty`를 전달합니다.
+
+![EXCEPTION](imgs/exception.png) 정적 이벤트일 경우 `sender` 인자는 `null`이 되어야 ![SHOULD](imgs/should.png) 합니다.
+
+
+## 가능하다면 지네릭(generic) 제약을 사용합니다 ![](imgs/should.png) ##
+
+지네릭 형식이나 메서드에서 `object` 형식을 캐스팅하지 말고 `where` 제약이나 `as` 오퍼레이터를 사용하여 지네릭 매개변수의 정확한 특성을 지정합니다.
+
 
 ```c#
 class SomeClass
@@ -103,9 +104,9 @@ class MyClass<T> where T : SomeClass
 ```
 
 
-## Evaluate the result of a LINQ expression before returning it ![](imgs/must.png) ##
+## LINQ 표현식을 반환하기전에 결과를 평가(실행)합니다 ![](imgs/must.png) ##
 
-Consider the following code snippet:
+다음의 코드를 봅시다.
 
 ```c#
 public IEnumerable<GoldMember> GetGoldMemberCustomers()
@@ -118,4 +119,4 @@ public IEnumerable<GoldMember> GetGoldMemberCustomers()
 }
 ```
 
-Since LINQ queries use deferred execution, returning `q` will actually return the expression tree representing the above query. Each time the caller evaluates this result using a `foreach` or something similar, the entire query is re-executed resulting in new instances of `GoldMember` every time. Consequently, you cannot use the `==` operator to compare multiple `GoldMember` instances. Instead, always explicitly evaluate the result of a LINQ query using `ToList()`, `ToArray()` or similar methods.
+LINQ 쿼리는 지연된 실행을 사용하기 때문에 `q`를 반환하는 것은 실제로는 위의 쿼리를 대표하는 표현식의 트리를 반환하는 것입니다. 이것을 `foreach`나 비슷한 호출자에서 사용할 때마다 매번 `GoldMember`의 새 인스턴스를 가져오는 전체 쿼리가 재실행됩니다. 따라서 이렇게 반환된 `GoldMember` 인스턴스를 `==` 연산자로 비교할 수 없습니다. 이보다는 항상 `ToList()`나 `ToArry()` 등의 메서드를 써서 LINQ 쿼리의 결과를 명시적으로 평가하도록 합니다.
